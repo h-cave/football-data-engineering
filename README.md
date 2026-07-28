@@ -10,3 +10,7 @@ lineups give you how a team are setup for a given match id
 matches this gives match details for a specific competion and season
 events from any given match_id within matches data you can find the events of that match
 competitions this is a file that identifies competions and there unique id. 
+
+
+Progress on mtch report. 
+I now have the yellow cards correct. However, I have noticed the away/home team lists in relation to cards are inverese. `fouls['possession_team']['name'] == home_team` when assigning the foul list. But if a team is in possesion then there won't be a foul (generally speaking) or at least I am yet to find data to prove that theroy incorrect. 
