@@ -100,9 +100,6 @@ def corners(home_team, away_team, event_data):
  
 ### These all need methods to create reusable code
 
-# total_home_team_corners = [corner for corner in data[0:-1] if corner['type']['name'] == "Corner" and corner['possession_team']['name'] == home_team]
-# total_away_team_corners = [corner for corner in data[0:-1] if corner['type']['name'] == "Corner" and corner['possession_team']['name'] == away_team]
-
 # fouls_home_team = [fouls for fouls in data[0:-1] if fouls["type"].get('name') == "Foul Committed" and fouls['team']['name'] == home_team]
 # fouls_away_team = [fouls for fouls in data[0:-1] if fouls["type"].get('name') == "Foul Committed" and fouls['team']['name'] == away_team]
 
