@@ -7,7 +7,8 @@ def get_match_metrics(home_team, away_team, event_data, match_id):
         "away_team": away_team, 
         "shot_data": analyse_shots(home_team, away_team, event_data),
         "pass_data": pass_data(home_team, away_team, event_data),
-        "corener_data": corners(home_team, away_team, event_data)
+        "corner_data": corners(home_team, away_team, event_data),
+        "foul_data": fouls(home_team, away_team, event_data)
     }
     
     return metrics
@@ -97,17 +98,43 @@ def corners(home_team, away_team, event_data):
                     corners_data['away_team_corners'] += 1
 
     return corners_data
+
+def fouls(home_team, away_team, event_data):
+    fouls_data = {
+        "fouls_home_team": 0,
+        "fouls_away_team": 0,
+        "yellow_card_home_team": 0,
+        "yellow_card_away_team": 0,
+        "red_card_home_teams": 0,
+        "red_card_away_teams": 0,
+        "cards_home_team": 0,
+        "cards_away_team": 0
+    }
+    yellow_card = ["Yellow Card", "Second Yellow"]
+    red_card = ["Red Card", "Second Yellow"]
+
+    for foul in event_data:
+
+        if foul["type"]["name"] in ["Foul Committed", "Bad Behaviour"]:
+
+            if foul["team"]["name"] == home_team:
+                fouls_data["fouls_home_team"] += 1
+                if foul.get("foul_committed", {}).get("card", {}).get("name") in yellow_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in yellow_card:
+                    fouls_data["yellow_card_home_team"] += 1
+                if foul.get("foul_committed", {}).get("card", {}).get("name") in red_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in red_card:
+                    fouls_data["red_card_home_teams"] += 1
+
+            if foul["team"]["name"] == away_team:
+                fouls_data["fouls_away_team"] += 1
+                if foul.get("foul_committed", {}).get("card", {}).get("name") in yellow_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in yellow_card:
+                    fouls_data["yellow_card_away_team"] += 1
+                if foul.get("foul_committed", {}).get("card", {}).get("name") in red_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in red_card:
+                    fouls_data["red_card_away_teams"] += 1
+
+    return fouls_data
  
 ### These all need methods to create reusable code
 
-# fouls_home_team = [fouls for fouls in data[0:-1] if fouls["type"].get('name') == "Foul Committed" and fouls['team']['name'] == home_team]
-# fouls_away_team = [fouls for fouls in data[0:-1] if fouls["type"].get('name') == "Foul Committed" and fouls['team']['name'] == away_team]
 
-# cards_home_team = [yellow_card for yellow_card in fouls_home_team if yellow_card.get('foul_committed') and yellow_card.get('foul_committed', "None").get('card')]
-# cards_away_team = [yellow_card for yellow_card in fouls_away_team if yellow_card.get('foul_committed') and yellow_card.get('foul_committed', "None").get('card')]
 
-# yellow_card_home_team = [card for card in cards_home_team if card.get("foul_committed")['card']['name'] in ["Yellow Card", "Second Yellow"]]
-# yellow_card_away_team = [card for card in cards_away_team if card.get("foul_committed")['card']['name'] in ["Yellow Card", "Second Yellow"]]
 
-# red_card_home_teams = [card for card in cards_home_team if card.get("foul_committed")['card']['name'] in ["Red Card", "Second Yellow"]]
-# red_card_away_teams = [card for card in cards_away_team if card.get("foul_committed")['card']['name'] in ["Red Card", "Second Yellow"]]

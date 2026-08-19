@@ -1,5 +1,6 @@
 from loader import load_matches_data, load_event_data
 from metrics import get_match_metrics
+from summary import game_summary
 
 import time
 start_time = time.time()
@@ -15,9 +16,11 @@ for matches in match_event_ids:
     event_data = load_event_data(matches["match_id"])
     home_team = matches["home_team"]["home_team_name"]
     away_team = matches["away_team"]["away_team_name"]
-    print(matches["match_id"])
+    #print(matches["match_id"])
     match_data = get_match_metrics(home_team, away_team, event_data, matches["match_id"])
-    print(match_data)
+    #print(match_data)
+    game_summary_output = game_summary(match_data)
+    print(game_summary_output)
     # Call a method in metrics. This method will call all the metrics methods and return a Dict object with the key values being the metrics. 
 
 print(f"--- {time.time() - start_time} seconds ---")
