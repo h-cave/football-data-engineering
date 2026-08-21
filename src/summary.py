@@ -1,7 +1,9 @@
 ###Summary will return a dict summary of the game. The data will be passed from main which gets it from metrics.py
 
+
 def game_summary(match_data):
-    print(f"""
+    print(
+        f"""
 
     ==========================================================
     score: {match_data["home_team"]}: {match_data["shot_data"]["home_team_goals"]} - {match_data["shot_data"]["away_team_goals"]} :{match_data["away_team"]}
@@ -29,4 +31,5 @@ def game_summary(match_data):
     yellow_cards: {match_data["foul_data"]["yellow_card_home_team"]}     -     {match_data["foul_data"]["yellow_card_away_team"]}
     red_cards: {match_data["foul_data"]["red_card_home_teams"]}     -     {match_data["foul_data"]["red_card_away_teams"]}
     ==========================================================
-    """)
+    """
+    )

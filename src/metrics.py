@@ -4,48 +4,50 @@ def get_match_metrics(home_team, away_team, event_data, match_id):
     metrics = {
         "match_id": match_id,
         "home_team": home_team,
-        "away_team": away_team, 
+        "away_team": away_team,
         "shot_data": analyse_shots(home_team, away_team, event_data),
         "pass_data": pass_data(home_team, away_team, event_data),
         "corner_data": corners(home_team, away_team, event_data),
-        "foul_data": fouls(home_team, away_team, event_data)
+        "foul_data": fouls(home_team, away_team, event_data),
     }
-    
+
     return metrics
 
+
 def analyse_shots(home_team, away_team, event_data):
-    
+
     shots_data = {
-            "total_home_team_shots": 0,
-            "total_away_team_shots": 0,
-            "home_team_xg_score": 0,
-            "away_team_xg_score": 0,
-            "home_team_goals": 0,
-            "away_team_goals": 0
-        }
+        "total_home_team_shots": 0,
+        "total_away_team_shots": 0,
+        "home_team_xg_score": 0,
+        "away_team_xg_score": 0,
+        "home_team_goals": 0,
+        "away_team_goals": 0,
+    }
 
     for shots in event_data:
-        if shots['type']['name'] in ["Shot"]:
-            if shots['possession_team']['name'] == home_team:
+        if shots["type"]["name"] in ["Shot"]:
+            if shots["possession_team"]["name"] == home_team:
                 shots_data["total_home_team_shots"] += 1
-                shots_data["home_team_xg_score"] += shots['shot']['statsbomb_xg']
-                if shots['shot']['outcome'].get('name') == 'Goal':
+                shots_data["home_team_xg_score"] += shots["shot"]["statsbomb_xg"]
+                if shots["shot"]["outcome"].get("name") == "Goal":
                     shots_data["home_team_goals"] += 1
 
             else:
                 shots_data["total_away_team_shots"] += 1
-                shots_data["away_team_xg_score"] += shots['shot']['statsbomb_xg']
-                if shots['shot']['outcome'].get('name') == 'Goal':
+                shots_data["away_team_xg_score"] += shots["shot"]["statsbomb_xg"]
+                if shots["shot"]["outcome"].get("name") == "Goal":
                     shots_data["away_team_goals"] += 1
 
         ## We need a seperate if to check for own goals
-        if shots['type']['name'] == "Own Goal For":
-            if shots['possession_team']['name'] == home_team:
+        if shots["type"]["name"] == "Own Goal For":
+            if shots["possession_team"]["name"] == home_team:
                 shots_data["home_team_goals"] += 1
             else:
                 shots_data["away_team_goals"] += 1
 
     return shots_data
+
 
 def pass_data(home_team, away_team, event_data):
 
@@ -59,46 +61,58 @@ def pass_data(home_team, away_team, event_data):
     }
 
     for data in event_data:
-        if data['type']['name'] == "Pass":
-            pass_data['passes'] += 1
+        if data["type"]["name"] == "Pass":
+            pass_data["passes"] += 1
 
             ## We check if the pass has come from a type that isn't "open play"
-            if data['pass'].get("type", {}).get("name", None) in ["Goal Kick", "Corner", "Throw-in", "Kick Off", "Free Kick"]:
-                if data['possession_team']['name'] == home_team:
-                    pass_data['total_home_team_passes'] += 1
+            if data["pass"].get("type", {}).get("name", None) in [
+                "Goal Kick",
+                "Corner",
+                "Throw-in",
+                "Kick Off",
+                "Free Kick",
+            ]:
+                if data["possession_team"]["name"] == home_team:
+                    pass_data["total_home_team_passes"] += 1
                 else:
-                    pass_data['total_away_team_passes'] += 1
+                    pass_data["total_away_team_passes"] += 1
                 continue
 
             ## We check if the play_pattern is in "open play"
-            if data['play_pattern']['name'] in ["Regular Play", "From Keeper", "From Goal Kick", "From Counter", "From Throw In", "From Kick Off", "From Free Kick", "From Corner"]:
-                pass_data['passes_in_open_play'] += 1
-                if data['possession_team']['name'] == home_team:
-                    pass_data['open_play_passes_home_team'] += 1
-                    pass_data['total_home_team_passes'] += 1
+            if data["play_pattern"]["name"] in [
+                "Regular Play",
+                "From Keeper",
+                "From Goal Kick",
+                "From Counter",
+                "From Throw In",
+                "From Kick Off",
+                "From Free Kick",
+                "From Corner",
+            ]:
+                pass_data["passes_in_open_play"] += 1
+                if data["possession_team"]["name"] == home_team:
+                    pass_data["open_play_passes_home_team"] += 1
+                    pass_data["total_home_team_passes"] += 1
                 else:
-                    pass_data['open_play_passes_away_team'] += 1
-                    pass_data['total_away_team_passes'] += 1
-
-
+                    pass_data["open_play_passes_away_team"] += 1
+                    pass_data["total_away_team_passes"] += 1
 
     return pass_data
 
+
 def corners(home_team, away_team, event_data):
-    corners_data = {
-        "home_team_corners": 0,
-        "away_team_corners": 0
-    }
+    corners_data = {"home_team_corners": 0, "away_team_corners": 0}
 
     for corner in event_data:
-        if corner['play_pattern']['name'] == "From Corner":
-            if corner.get("pass", {}).get("type", {}).get("name", {}) == 'Corner':
-                if corner['possession_team']['name'] == home_team:
-                    corners_data['home_team_corners'] += 1
+        if corner["play_pattern"]["name"] == "From Corner":
+            if corner.get("pass", {}).get("type", {}).get("name", {}) == "Corner":
+                if corner["possession_team"]["name"] == home_team:
+                    corners_data["home_team_corners"] += 1
                 else:
-                    corners_data['away_team_corners'] += 1
+                    corners_data["away_team_corners"] += 1
 
     return corners_data
+
 
 def fouls(home_team, away_team, event_data):
     fouls_data = {
@@ -118,17 +132,36 @@ def fouls(home_team, away_team, event_data):
 
             if foul["team"]["name"] == home_team:
                 fouls_data["fouls_home_team"] += 1
-                if foul.get("foul_committed", {}).get("card", {}).get("name") in yellow_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in yellow_card:
+                if (
+                    foul.get("foul_committed", {}).get("card", {}).get("name")
+                    in yellow_card
+                    or foul.get("bad_behaviour", {}).get("card", {}).get("name")
+                    in yellow_card
+                ):
                     fouls_data["yellow_card_home_team"] += 1
-                if foul.get("foul_committed", {}).get("card", {}).get("name") in red_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in red_card:
+                if (
+                    foul.get("foul_committed", {}).get("card", {}).get("name")
+                    in red_card
+                    or foul.get("bad_behaviour", {}).get("card", {}).get("name")
+                    in red_card
+                ):
                     fouls_data["red_card_home_teams"] += 1
 
             if foul["team"]["name"] == away_team:
                 fouls_data["fouls_away_team"] += 1
-                if foul.get("foul_committed", {}).get("card", {}).get("name") in yellow_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in yellow_card:
+                if (
+                    foul.get("foul_committed", {}).get("card", {}).get("name")
+                    in yellow_card
+                    or foul.get("bad_behaviour", {}).get("card", {}).get("name")
+                    in yellow_card
+                ):
                     fouls_data["yellow_card_away_team"] += 1
-                if foul.get("foul_committed", {}).get("card", {}).get("name") in red_card or foul.get("bad_behaviour", {}).get("card", {}).get("name") in red_card:
+                if (
+                    foul.get("foul_committed", {}).get("card", {}).get("name")
+                    in red_card
+                    or foul.get("bad_behaviour", {}).get("card", {}).get("name")
+                    in red_card
+                ):
                     fouls_data["red_card_away_teams"] += 1
 
     return fouls_data
-

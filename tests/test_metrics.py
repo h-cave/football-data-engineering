@@ -181,21 +181,38 @@ class TestMetrics:
         actual_fouls_data = fouls(self.home_team, self.away_team, self.foul_data)
 
         assert expected_fouls_data == actual_fouls_data
-        
+
     def test_analyse_shots_returns_correct_directory_contents(self):
-        expected_shots_data = {'total_home_team_shots': 1, 'total_away_team_shots': 0, 'home_team_xg_score': 0.26788074, 'away_team_xg_score': 0, 'home_team_goals': 1, 'away_team_goals': 1}
+        expected_shots_data = {
+        'total_home_team_shots': 1, 
+        'total_away_team_shots': 0, 
+        'home_team_xg_score': 0.26788074, 
+        'away_team_xg_score': 0, 
+        'home_team_goals': 1, 
+        'away_team_goals': 1
+        }
         shots_data = analyse_shots(self.home_team, self.away_team, self.event)
 
         assert expected_shots_data == shots_data
 
     def test_pass_data_returns_correct_dictionary_contents(self):
-        expected_pass_data = {"passes": 4, "passes_in_open_play": 2, "total_home_team_passes": 2, "total_away_team_passes": 2, "open_play_passes_home_team": 1, "open_play_passes_away_team": 1}
+        expected_pass_data = {
+        "passes": 4,
+        "passes_in_open_play": 2,
+        "total_home_team_passes": 2, 
+        "total_away_team_passes": 2, 
+        "open_play_passes_home_team": 1,
+        "open_play_passes_away_team": 1
+        }
         pass_data_recieved = pass_data(self.home_team, self.away_team, self.pass_event_data)
 
         assert expected_pass_data == pass_data_recieved
 
     def test_corner_data_returns_correct_dictionary_contents(self):
-        expected_corner_data = {"home_team_corners": 1, "away_team_corners": 0}
+        expected_corner_data = {
+        "home_team_corners": 1,
+        "away_team_corners": 0
+        }
         corner_data = corners(self.home_team, self.away_team, self.corner_data)
 
         assert expected_corner_data == corner_data
