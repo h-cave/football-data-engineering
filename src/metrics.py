@@ -64,10 +64,14 @@ def pass_data(home_team, away_team, event_data):
 
             ## We check if the pass has come from a type that isn't "open play"
             if data['pass'].get("type", {}).get("name", None) in ["Goal Kick", "Corner", "Throw-in", "kick Off", "Free Kick"]:
+                if data['possession_team']['name'] == home_team:
+                    pass_data['total_home_team_passes'] += 1
+                else:
+                    pass_data['total_away_team_passes'] += 1
                 continue
 
             ## We check if the play_pattern is in "open play"
-            if data['play_pattern']['name'] in ["Regular Play", "From Keeper", "From Goal Kick", "From Counter", "From Throw In"]:
+            if data['play_pattern']['name'] in ["Regular Play", "From Keeper", "From Goal Kick", "From Counter", "From Throw In", "From Kick Off", "From Free Kick", "From Corner"]:
                 pass_data['passes_in_open_play'] += 1
                 if data['possession_team']['name'] == home_team:
                     pass_data['open_play_passes_home_team'] += 1
@@ -75,11 +79,8 @@ def pass_data(home_team, away_team, event_data):
                 else:
                     pass_data['open_play_passes_away_team'] += 1
                     pass_data['total_away_team_passes'] += 1
-            else:
-                if data['possession_team']['name'] == home_team:
-                    pass_data['total_home_team_passes'] += 1
-                else:
-                    pass_data['total_away_team_passes'] += 1
+
+
 
     return pass_data
 
