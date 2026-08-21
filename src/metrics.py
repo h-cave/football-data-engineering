@@ -63,7 +63,7 @@ def pass_data(home_team, away_team, event_data):
             pass_data['passes'] += 1
 
             ## We check if the pass has come from a type that isn't "open play"
-            if data['pass'].get("type", {}).get("name", None) in ["Goal Kick", "Corner", "Throw-in", "kick Off", "Free Kick"]:
+            if data['pass'].get("type", {}).get("name", None) in ["Goal Kick", "Corner", "Throw-in", "Kick Off", "Free Kick"]:
                 if data['possession_team']['name'] == home_team:
                     pass_data['total_home_team_passes'] += 1
                 else:
@@ -108,8 +108,6 @@ def fouls(home_team, away_team, event_data):
         "yellow_card_away_team": 0,
         "red_card_home_teams": 0,
         "red_card_away_teams": 0,
-        "cards_home_team": 0,
-        "cards_away_team": 0
     }
     yellow_card = ["Yellow Card", "Second Yellow"]
     red_card = ["Red Card", "Second Yellow"]
@@ -133,9 +131,4 @@ def fouls(home_team, away_team, event_data):
                     fouls_data["red_card_away_teams"] += 1
 
     return fouls_data
- 
-### These all need methods to create reusable code
-
-
-
 
