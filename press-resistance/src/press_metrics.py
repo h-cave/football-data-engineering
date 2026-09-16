@@ -12,7 +12,7 @@ def cb_press_resistance_metric(event_data):
                 player_name = press_data["player"]["name"]
                 # We check if the keys already exists so that we don't overwrite them
                 if player_name not in cb_id_to_name_store:
-                    cb_id_to_name_store[player_name] = cb_id
+                    cb_id_to_name_store[cb_id] = player_name
                 if cb_id not in cb_press_resistance_metric_score:
                     cb_press_resistance_metric_score[cb_id] = {"sucesfull_action": 0, "total_actions": 0}
 
@@ -29,10 +29,9 @@ def cb_press_resistance_metric(event_data):
                     if outcome == True:
                         cb_press_resistance_metric_score[cb_id]["sucesfull_action"] += 1
     print(cb_id_to_name_store)
+    print(f"metric score in press_mtric file: {cb_press_resistance_metric_score}")
+    return cb_press_resistance_metric_score, cb_id_to_name_store
     
-    return cb_press_resistance_metric_score
-    
-
 def recipient_tracking_data(event, event_id, recipient_id, current_possession):
     ###Current issue:
     ### When looping through we get the event id we need.
@@ -43,10 +42,13 @@ def recipient_tracking_data(event, event_id, recipient_id, current_possession):
     for events in event:
         if events["id"] != event_id and first_counter < 1:
             continue
+
+        first_counter += 1
+        print(f"EVENT BEFORE WE CHECK PLAYER_ID: {events}")
         
-        first_counter += 1 and events["possession"] == current_possession
-        if events["player"]["id"] == recipient_id and events["type"].get("name") == "Pass":
+        if events.get("player", {}).get("id") == recipient_id and events["type"].get("name") == "Pass":
             if events["possession"] == current_possession:# We ensure the stage of play is still the same as when the CB passed it - this needs refinement
+            
                 print(events)
                 if events["pass"].get("outcome") == None:
                     print("Recipient has passed the ball")
@@ -57,13 +59,9 @@ def recipient_tracking_data(event, event_id, recipient_id, current_possession):
                     print("-------------------------------------------")
                     return False
 
-                
             else:
                 print("another action happened - ignore for now")
                 print("-----------------------------------------")
 
             
             first_counter = 0
-        
-
-
