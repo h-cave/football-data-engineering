@@ -7,7 +7,7 @@ la_liga_matches = load_matches_data()
 
 total_cb_press_score = dict()
 total_id_to_name_dictionary = dict()
-barcelona_matches = [303532, 303377, 16086, 16231, 303479]#[303532, 303479, 303377]
+barcelona_matches = [303532, 303377, 16086, 16231, 303479]
 
 for matches in la_liga_matches:
     print(f"THIS IS MATCH: {matches}")
