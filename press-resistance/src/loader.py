@@ -2,10 +2,6 @@ import json
 
 open_data_path = "/home/harry/projects/open-data/data"
 
-import json
-
-open_data_path = "/home/harry/projects/open-data/data"
-
 
 def load_matches_data():
     ### Used to get the match_id within matches
