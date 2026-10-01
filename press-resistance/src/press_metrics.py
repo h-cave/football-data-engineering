@@ -42,10 +42,12 @@ def recipient_tracking_data(event, event_id, recipient_id, current_possession):
     ### This stops situations in which the cirepient may make a pass unrelated to the CBs pass (could do with refinement)
     ### Then check if the recipients pass has a outcome or not to detemine if they suceeded
     print(f"cb made pass on possesion: {current_possession}")
+    first_counter = 0
+
     for events in event:
         if events["id"] != event_id and first_counter < 1:
             continue
-
+        
         first_counter += 1
         print(f"EVENT BEFORE WE CHECK PLAYER_ID: {events}")
         

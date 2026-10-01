@@ -1,11 +1,11 @@
 import json
 
-open_data_path = "/home/harry/projects/open-data/data"
+open_data_path = "/Users/harryc/projects/open-data/data"
 
 
 def load_matches_data():
     ### Used to get the match_id within matches
-    with open(f"{open_data_path}/matches/11/1.json", "r") as file:
+    with open(f"{open_data_path}/matches/2/27.json", "r") as file:
         data = json.load(file)
     return data
 
