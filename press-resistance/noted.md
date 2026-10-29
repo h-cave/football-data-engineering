@@ -253,7 +253,17 @@ An example of an event where Umtit wouldn't get a point. He passes under preassu
 }
 ```
 
-{'id': '023826bd-5613-4f5a-82a4-926ebea2106d', 'index': 23, 'period': 1, 'timestamp': '00:00:20.290', 'minute': 0, 'second': 20, 'type': {'id': 30, 'name': 'Pass'}, 'possession': 3, 'possession_team': {'id': 217, 'name': 'Barcelona'}, 'play_pattern': {'id': 1, 'name': 'Regular Play'}, 'team': {'id': 217, 'name': 'Barcelona'}, 'player': {'id': 5213, 'name': 'Gerard Piqué Bernabéu'}, 'position': {'id': 3, 'name': 'Right Center Back'}, 'location': [34.8, 23.4], 'duration': 1.221624, 'under_pressure': True, 'related_events': ['0049b4d5-910d-4bfe-8ee9-97de93ae8b83', '72a81744-f231-4405-941d-476ecb40f396', 'd237f7b1-3183-4c39-915d-c22376297740'], 'pass': {'recipient': {'id': 5492, 'name': 'Samuel Yves Umtiti'}, 'length': 3.7589893, 'angle': -1.0714496, 'height': {'id': 2, 'name': 'Low Pass'}, 'end_location': [36.6, 20.1], 'type': {'id': 66, 'name': 'Recovery'}, 'aerial_won': True}}
+Note: At the moment my model only takes into account a player passing after recieving the ball from a CB. So if the reciever wins a free kick/shoots/gets a throw in or any action that isn't a shot my model doesn't account for it 
 
 
-NOte: At the moment my model only takes into account a player passing after recieving the ball from a CB. So if the reciever wins a free kick/shoots/gets a throw in or any action that isn't a shot my model doesn't account for it 
+Todo:
+- I need a way to work out when a player comes on as sub. At the moment he just gets the full game minutes
+- Once this is done. Once all the games have progressed through. Get sucesfull and total events per season
+
+Today I:
+There was an issue whereby on the first run through, a players metrics would be counted twice. due to 
+```
+if bool(currunt_score) == False:
+     currunt_score = new_score
+```
+This was fixed by removing this as it wasn't needed.     
