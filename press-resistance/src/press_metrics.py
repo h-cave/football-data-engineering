@@ -1,9 +1,8 @@
 from minutes_played_data import minutes_played
 
-def cb_press_resistance_metric(event_data):
+def cb_press_resistance_metric(event_data, match_id):
     cb_id_to_name_store = {}
     cb_press_resistance_metric_score = {}
-    cb_time_played_in_seconds = {}
     # Below ids are used to store the cb and the player the cb passes to so we can run checks. 
     cb_id = ""
     recipitent_id = ""
@@ -17,8 +16,9 @@ def cb_press_resistance_metric(event_data):
                 if player_name not in cb_id_to_name_store:
                     cb_id_to_name_store[cb_id] = player_name
                 if cb_id not in cb_press_resistance_metric_score:
-                    seconds_played = minutes_played(event_data, cb_id)
-                    cb_press_resistance_metric_score[cb_id] = {"sucesfull_action": 0, "total_actions": 0, "seconds_played": seconds_played, "actions_per_90": 0, "sucessfull_actions_per_90": 0}
+                    match_total_minutes = f"{event_data[-1]["minute"]}:{event_data[-1]["second"]}"
+                    seconds_played = minutes_played(match_total_minutes, cb_id, match_id)
+                    cb_press_resistance_metric_score[cb_id] = {"sucesfull_action": 0, "total_actions": 0, "seconds_played": seconds_played, "actions_per_90": 0, "sucessfull_actions_per_90": 0, "0_15_yard_pass": 0, "16_to_30_yard_pass": 0, "31_plus_yard_pass": 0}
 
                     
                 ## We skip any events that are not under preassure 
@@ -26,9 +26,11 @@ def cb_press_resistance_metric(event_data):
                     continue
                 ## If a pass has an outcome it is not a completed pass so we add a total_action count to the player 
                 if press_data["pass"].get("outcome") != None:
+                    cb_press_resistance_metric_score = update_passing_disatance(press_data, cb_id, cb_press_resistance_metric_score)
                     cb_press_resistance_metric_score[cb_id]["total_actions"] += 1
                 else:
                     # we add a total action and call recipient_tracking_data to se if the recipient retains possesion
+                    cb_press_resistance_metric_score = update_passing_disatance(press_data, cb_id, cb_press_resistance_metric_score)
                     cb_press_resistance_metric_score[cb_id]["total_actions"] += 1
                     # Pass through all events and the event id. 
                     # Pass through the recipient of the CBs pass
@@ -67,3 +69,16 @@ def recipient_tracking_data(event, event_id, recipient_id, current_possession):
 
             
             first_counter = 0
+
+def update_passing_disatance(event, player_id, current_player_score):
+    print("EVENT")
+    print(event)
+    pass_length = event["pass"].get("length")
+    if pass_length <= 15:
+        current_player_score[player_id]["0_15_yard_pass"] += 1
+    elif pass_length > 15 and pass_length <= 30:
+        current_player_score[player_id]["16_to_30_yard_pass"] += 1
+    else:
+        current_player_score[player_id]["31_plus_yard_pass"] += 1
+
+    return current_player_score
